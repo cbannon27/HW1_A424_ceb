@@ -17,6 +17,7 @@ void problem5();
 void problem6();
 //double dot_product(vector<double>& w, vector<double>& x);
 void problem7();
+void problem8();
 
 
 int main()
@@ -53,12 +54,12 @@ int main()
 	cout << " Problem 7: " << endl;
 	cout << " " << endl;
 	problem7();
-	/*
+	
 	cout << " " << endl;
 	cout << " Problem 8: " << endl;
 	cout << " " << endl;
 	problem8();
-	*/
+	
 	return 0;
 }
 
@@ -226,15 +227,29 @@ vector<double> gradient_weights(const vector<double>& w, const vector<double>& x
 	cout << endl;
 	return dw;
 }
-
+vector<double> update_weights(vector<double>& w,  vector<double>& dw, double& alf) {
+	for (size_t i = 0; i < w.size(); i++) {
+		w[i] = w[i]-alf * dw[i];
+	}
+	cout << "w = ";
+	for (size_t i = 0; i < dw.size(); i++) {
+		cout << w[i] << " ";
+	}
+	cout << endl;
+	return w;
+}
 void problem7() {
 	//calling functions
-	const vector<double> w = { .0001,.0001,.0001 };
+	 vector<double> w = { .0001,.0001,.0001 };
 	const vector<double> x = { 124,31.89,20.945 };
 	
 	double y = 1;
-	//double alf = .001;
-	gradient_weights(w, x, y);
+	double alf = .001;
+	vector<double> dw = gradient_weights(w, x, y);
 	
+	update_weights(w, dw, alf);
 
 	}
+void problem9() {
+
+}
