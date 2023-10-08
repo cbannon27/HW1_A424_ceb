@@ -17,7 +17,8 @@ void problem5();
 void problem6();
 //double dot_product(vector<double>& w, vector<double>& x);
 void problem7();
-void problem8();
+vector<double> problem8();
+//void problem9();
 
 
 int main()
@@ -59,6 +60,11 @@ int main()
 	cout << " Problem 8: " << endl;
 	cout << " " << endl;
 	problem8();
+
+	cout << " " << endl;
+	cout << " Problem 9: " << endl;
+	cout << " " << endl;
+	//problem9();
 	
 	return 0;
 }
@@ -257,25 +263,29 @@ void problem7() {
 
 	}
 
-double predictor(vector<vector<double>>& aircraftData, vector<double>& w) {
-	int max = 150;
+vector<double> trainer(vector<vector<double>>& aircraftData, vector<double>& w, double& alf) {
+	vector<double> w_train(w.size(), 0.0);
+	int max = 100;
 	int iteration = 0;
-
+	
 	while (iteration < max) {
-		double err = 0.0;
+		
 		for (const auto& data : aircraftData) {
-			vector<double> x = { data[3], data[3] , data[3] };
+			vector<double> x = { data[0], data[1] , data[2] };
 			double y = data[3];
 
 			double z = dot_product(w, x);
 			double sig = sigmoid(z);
 			vector<double> dw = gradient_weights(w, x, y);
+			w_train = update_weights(w, dw, alf);
+
 		}
+		iteration++;
 	}
-	return 0;
+	return w_train;
 }
 
-void problem8() {
+vector<double> problem8() {
 	vector<double> w = { .0001,.0001,.0001 };
 	double alf = .001;
 
@@ -289,5 +299,42 @@ void problem8() {
 		{130, 31.29, 17.637, 1}, // Aero L-159 Alca
 		{73, 52.00, 9.600, 0}    // AT-504
 	};
-	predictor(aircraftData, w);
+	vector<double> w_train = trainer(aircraftData, w, alf);
+	cout << "w = ";
+	for (size_t i = 0; i < w_train.size(); i++) {
+		cout << w_train[i] << " ";
+	}
+	cout << endl;
+	return w_train;
+}
+
+double predictor(vector<vector<double>>& new_data, vector<double>& w_train) {
+	double y_predict= 0.0 ;
+	
+
+		for (const auto& data : new_data) {
+			vector<double> x = { data[0], data[1] , data[2] };
+		
+			double z = dot_product(w_train, x);
+			double y_predict = sigmoid(z);
+			
+			
+			
+
+		}
+	return y_predict;
+}
+
+
+void problem9() {
+	vector<double> w_train = problem8();
+	vector<vector<double>> new_data = {
+		{87, 38.67, 6.000}, //SF50 Vision
+		{79, 52.08, 8.000}, //208 Caravan
+		{92, 33.75, 7.804}, //Aero L-29 Delfin
+		{91, 59.25, 16.000}, //AT-802U
+	};
+	double y_predict = predictor(new_data, w_train);
+	cout << "y predict = " << y_predict << endl;
+
 }
