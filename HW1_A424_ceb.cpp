@@ -18,7 +18,7 @@ void problem6();
 //double dot_product(vector<double>& w, vector<double>& x);
 void problem7();
 vector<double> problem8();
-//void problem9();
+void problem9();
 
 
 int main()
@@ -64,7 +64,7 @@ int main()
 	cout << " " << endl;
 	cout << " Problem 9: " << endl;
 	cout << " " << endl;
-	//problem9();
+	problem9();
 	
 	return 0;
 }
@@ -270,9 +270,9 @@ vector<double> trainer(vector<vector<double>>& aircraftData, vector<double>& w, 
 	
 	while (iteration < max) {
 		
-		for (const auto& data : aircraftData) {
-			vector<double> x = { data[0], data[1] , data[2] };
-			double y = data[3];
+		for (size_t i = 0; i < aircraftData.size(); i++) {
+			vector<double> x = { aircraftData[i][0], aircraftData[i][1] , aircraftData[i][2] };
+			double y = aircraftData[i][3];
 
 			double z = dot_product(w, x);
 			double sig = sigmoid(z);
@@ -308,20 +308,23 @@ vector<double> problem8() {
 	return w_train;
 }
 
-double predictor(vector<vector<double>>& new_data, vector<double>& w_train) {
-	double y_predict= 0.0 ;
+vector<double> predictor(vector<vector<double>>& new_data, vector<double>& w_train) {
+	vector<double> y_predict(new_data.size(), 0.0);
 	
 
-		for (const auto& data : new_data) {
-			vector<double> x = { data[0], data[1] , data[2] };
+	for (size_t i = 0; i < new_data.size(); i++) {
 		
-			double z = dot_product(w_train, x);
-			double y_predict = sigmoid(z);
-			
-			
-			
+			vector<double> x = { new_data[i][0], new_data[i][1] , new_data[i][2] };
 
-		}
+			double z = dot_product(w_train, x);
+			double y_pred = sigmoid(z);
+
+			y_predict[i] = y_pred;
+		
+
+
+
+	}
 	return y_predict;
 }
 
@@ -334,7 +337,11 @@ void problem9() {
 		{92, 33.75, 7.804}, //Aero L-29 Delfin
 		{91, 59.25, 16.000}, //AT-802U
 	};
-	double y_predict = predictor(new_data, w_train);
-	cout << "y predict = " << y_predict << endl;
+	vector<double> y_predict = predictor(new_data, w_train);
+	cout << "y_predict = ";
+	for (size_t i = 0; i < y_predict.size(); i++) {
+		cout << y_predict[i] << " ";
+	}
+	cout << endl;
 
 }
