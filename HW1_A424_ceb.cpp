@@ -160,7 +160,7 @@ double dot_product(const vector<double>& w,const vector<double>& x) {
 	for (size_t i = 0; i < w.size(); i++) {
 		z += w[i] * x[i];
 	}
-	cout << "dot product, z = " << z << endl;
+	
 	return z;
 }
 void problem4() {
@@ -168,7 +168,8 @@ void problem4() {
 	const vector<double> w = { .0001,.0001,.0001 };
 	const vector<double> x = { 124,31.89,20.945 };
 	//initializing result
-	dot_product(w, x);
+	double z =dot_product(w, x);
+	cout << "dot product, z = " << z << endl;
 	//dot product function uses size_t to adjust to whatever size the given vectors are
 	
 	
@@ -177,14 +178,14 @@ void problem4() {
 double sigmoid(double& z) {
 	double sig = 0.0;
 	sig = 1 / (1 + exp(-z));
-	cout << "sigmoid = " << sig << endl;
+	
 	return sig;
 }
 double gradient_sigmoid(double& sig) {
 	double ddtsig = 0.0;
 	ddtsig = sig * (1 - sig);
 
-	cout << "gradient_sigmoid = " << ddtsig << endl;
+	
 	return ddtsig;
 
 }
@@ -195,9 +196,10 @@ void problem5() {
 	
 	//sigmoid function
 	double sig = sigmoid(z);
-
+	cout << "sigmoid = " << sig << endl;
 	//gradient_sigmoid function
-	gradient_sigmoid(sig);
+	double ddtsig=gradient_sigmoid(sig);
+	cout << "gradient_sigmoid = " << ddtsig << endl;
 }
 
 void problem6() {
@@ -212,7 +214,7 @@ void problem6() {
 	cout << "gradient_cost = " << dC << endl;
 
 }
-vector<double> gradient_weights(const vector<double>& w, const vector<double>& x, double& y) {
+vector<double> gradient_weights(const vector<double>& w,  vector<double>& x, double& y) {
 	vector<double> dw(w.size(), 0.0);
 	double z = dot_product(w, x);
 	double sig = sigmoid(z);
@@ -220,36 +222,72 @@ vector<double> gradient_weights(const vector<double>& w, const vector<double>& x
 	for (size_t i = 0; i < w.size(); i++) {
 		dw[i] = 2 * (sig - y) * sig * (1 - sig) * x[i];
 	}
-	cout << "dw = ";
-	for (size_t i = 0; i < dw.size(); i++) {
-		cout << dw[i] << " ";
-	}
-	cout << endl;
+	
 	return dw;
 }
 vector<double> update_weights(vector<double>& w,  vector<double>& dw, double& alf) {
 	for (size_t i = 0; i < w.size(); i++) {
 		w[i] = w[i]-alf * dw[i];
 	}
-	cout << "w = ";
-	for (size_t i = 0; i < dw.size(); i++) {
-		cout << w[i] << " ";
-	}
-	cout << endl;
+	
 	return w;
 }
 void problem7() {
 	//calling functions
 	 vector<double> w = { .0001,.0001,.0001 };
-	const vector<double> x = { 124,31.89,20.945 };
+	 vector<double> x = { 124,31.89,20.945 };
 	
 	double y = 1;
 	double alf = .001;
 	vector<double> dw = gradient_weights(w, x, y);
 	
+	cout << "dw = ";
+	for (size_t i = 0; i < dw.size(); i++) {
+		cout << dw[i] << " ";
+	}
+	cout << endl;
+
 	update_weights(w, dw, alf);
 
+	cout << "w = ";
+	for (size_t i = 0; i < dw.size(); i++) {
+		cout << w[i] << " ";
 	}
-void problem9() {
+	cout << endl;
 
+	}
+
+double predictor(vector<vector<double>>& aircraftData, vector<double>& w) {
+	int max = 150;
+	int iteration = 0;
+
+	while (iteration < max) {
+		double err = 0.0;
+		for (const auto& data : aircraftData) {
+			vector<double> x = { data[3], data[3] , data[3] };
+			double y = data[3];
+
+			double z = dot_product(w, x);
+			double sig = sigmoid(z);
+			vector<double> dw = gradient_weights(w, x, y);
+		}
+	}
+	return 0;
+}
+
+void problem8() {
+	vector<double> w = { .0001,.0001,.0001 };
+	double alf = .001;
+
+	vector<vector<double>> aircraftData = {
+		{124, 31.89, 20.945, 1}, // M-346 Master
+		{74, 51.08, 9.170, 0},   // AT-402B
+		{103, 34.67, 8.300, 1},  // MB-326
+		{77, 52.00, 9.400, 0},   // AT-502B
+		{104, 35.63, 13.000, 1}, // MB-339
+		{92, 56.00, 12.500, 0},  // AT-602
+		{130, 31.29, 17.637, 1}, // Aero L-159 Alca
+		{73, 52.00, 9.600, 0}    // AT-504
+	};
+	predictor(aircraftData, w);
 }
